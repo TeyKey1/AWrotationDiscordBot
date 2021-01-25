@@ -1,6 +1,15 @@
 {
     "token": "",
     "options": {
-        "prefix": "$"
+        "prefix": "$",
+        "rotationURL": "https://aw.nikr.net/rotation_lists.ini",
+        "rotationFile": {
+            "13standardHeader": "T1-3 Standard",
+            "12hardcoreHeader": "T1-2 Hardcore",
+            "46standardHeader": "T4-6 Standard",
+            "36hardcoreHeader": "T3-6 Hardcore",
+            "710standardHeader": "T7-10 Standard",
+            "710hardcoreHeader": "T7-10 Hardcore"
+        }
     }
 }
