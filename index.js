@@ -5,19 +5,18 @@ const eventHandler = require("./events/eventHandler");
 const  {saveData, readData, readDataSync} = require("./utility/dataHandler");
 const {downloadRotation} = require("./utility/fetchRotation");
 const {generateImage} = require("./rotation");
+const { loadGuilds } = require("./guild/guildHandler");
 
-let servers = [];
-
-const client = new Discord.Client();
+const bot = new Discord.Client();
 
 //Initialization & Login
-client.login(config.get("token"));
+bot.login(config.get("token"));
 
 init();
 
 
-client.on("ready", ()=>{
-    client.user.setPresence({
+bot.on("ready", ()=>{
+    bot.user.setPresence({
         status: "online", 
         activity: {
             name: "AW PVE rotations",
@@ -29,15 +28,15 @@ client.on("ready", ()=>{
 });
 
 //Events
-client.on("message", eventHandler.onMessage);
-client.on("guildCreate", eventHandler.onGuildCreate);
-client.on("guildDelete", eventHandler)
+bot.on("message", eventHandler.onMessage);
+bot.on("guildCreate", eventHandler.onGuildCreate);
+bot.on("guildDelete", eventHandler.onGuildDelete);
 
 
 
 async function init(){
     try {
-        servers = readDataSync();
+        loadGuilds();
 
         await downloadRotation();
 
@@ -45,3 +44,5 @@ async function init(){
         console.log("Failed to read server file: " + err);
     }
 }
+
+module.exports.bot = bot;
