@@ -4,7 +4,7 @@ const config = require("config");
 const eventHandler = require("./events/eventHandler");
 const  {saveData, readData, readDataSync} = require("./utility/dataHandler");
 const {downloadRotation} = require("./utility/fetchRotation");
-const {generateImage} = require("./rotation");
+const {generateImage, scheduleUpdateTasks} = require("./rotation");
 const { loadGuilds } = require("./guild/guildHandler");
 
 const bot = new Discord.Client();
@@ -35,14 +35,17 @@ bot.on("guildDelete", eventHandler.onGuildDelete);
 
 
 async function init(){
+    //Start webserver serving static files
+    require("./server");
+    
     try {
         loadGuilds();
 
         await downloadRotation();
 
+        scheduleUpdateTasks(bot);
+
     } catch (err) {
         console.log("Failed to read server file: " + err);
     }
 }
-
-module.exports.bot = bot;
