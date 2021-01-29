@@ -2,26 +2,35 @@ const Discord = require("discord.js");
 
 const {saveData, readDataSync} = require("../utility/dataHandler");
 
-var guilds = [];
+var guilds = new Map();
 
 function createGuild(guild){
-    guilds.push({
+
+    const existing = exists(guild);
+
+    if(existing){
+        //Flush rotationChannelData
+
+        saveData(guilds);
+        return existing;
+    }
+
+    const guildData = {
         name: guild.name,
         guildId: guild.id,
         rotationChannelData: []
-    });
+    };
+
+    guilds.set(guild.id, guildData);
+    console.log(guilds);
 
     saveData(guilds);
+
+    return guildData;
 }
 
 function deleteGuild(guild){
-
-    for(var i = 0; i < guilds.length; i++){
-        if(guilds[i].guildId === guild.id){
-            guilds.splice(i, 1);
-            break;
-        }
-    }
+    guilds.delete(guild.id);
 
     saveData(guilds);
 }
@@ -35,43 +44,44 @@ function getGuilds(){
 }
 
 async function addRotationChannel(guild, rotationChannel){
-    if(!exists(guild)){
-        createGuild(guild);
+    var guildData = exists(guild);
+
+    if(!guildData){
+        guildData = createGuild(guild);
     }
+
+    //check if channel already has rotation
+
 
     const embed = new Discord.MessageEmbed()
         .setColor("#FCA311")
-        .setTitle("Current rotations")
+        .setTitle("PVE Rotations")
         .setDescription("The Description");
 
-    const rotationMessage = await rotationChannel.send(":regional_indicator_p: :regional_indicator_v: :regional_indicator_e:   :regional_indicator_r: :regional_indicator_o: :regional_indicator_t: :regional_indicator_a: :regional_indicator_t: :regional_indicator_i: :regional_indicator_o: :regional_indicator_n:", embed);
-    const rotationImage = await rotationChannel.send("https://i.imgur.com/pRHE8M5.png");
+    const rotationMessage = await rotationChannel.send("", embed);
+    const rotationImage = await rotationChannel.send("http://teygaming.com:1212/data/rotations.png");
+
+    guildData.rotationChannelData.push({
+        channelId: rotationChannel.id,
+        rotationMessageId: rotationMessage.id,
+        rotationImageId: rotationImage.id
+    });
     
-
-
-    /*for(var i = 0; i < guilds.length; i++){
-        if(guilds[i].guildId === guild.id){
-            guilds[i].rotationChannelData.push({});
-        }
-    }
-
-    saveData(guilds);*/
+    guilds.set(guildData.guildId, guildData); 
+    saveData(guilds);
 }
 
 /*
-* Check if Guild exists in Database
+* Check if Guild exists in Database. Returns the guild data if it exists
 */
 function exists(guild){
-    var exists = false;
+    var guildData = undefined;
 
-    for(var i = 0; i < guilds.length; i++){
-        if(guilds[i].guildId === guild.id){
-            exists = true;
-            break;
-        }
+    if(guilds.has(guild.id)){
+        guildData = guilds.get(guild.id);
     }
 
-    return exists;
+    return guildData;
 }
 
 module.exports.createGuild = createGuild;

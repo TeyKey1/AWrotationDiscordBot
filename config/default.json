@@ -3,6 +3,7 @@
     "options": {
         "prefix": "$",
         "rotationURL": "https://aw.nikr.net/rotation_lists.ini",
+        "rotationSourceUrl": "https://aw.nikr.net/",
         "rotationFile": {
             "13standardHeader": "T1-3 Standard",
             "12hardcoreHeader": "T1-2 Hardcore",
@@ -11,5 +12,9 @@
             "710standardHeader": "T7-10 Standard",
             "710hardcoreHeader": "T7-10 Hardcore"
         }
+    },
+    "server": {
+        "port": 1212,
+        "baseUrl": "http://teygaming.com"
     }
 }
