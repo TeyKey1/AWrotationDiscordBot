@@ -5,6 +5,7 @@ const streamToString = require("stream-to-string");
 const  {DateTime} = require("luxon");
 
 const {setRotationDate, getRotationDate, setRotations, setOffset} = require("../rotation");
+const {updateSchedule} = require("../scheduler/rotationsSchedule");
 
 const rotationFilePath = "./data/rotation.json";
 
@@ -21,7 +22,6 @@ async function downloadRotation(){
 
     const date = DateTime.fromFormat(data.date, "yyyy-MM-dd hh:mm");
     
-
     //Data up to date
     if(getRotationDate().equals(date)){
         return;
@@ -36,6 +36,7 @@ async function downloadRotation(){
         }
 
         updateRotation();  
+        updateSchedule();
     }); 
 }
 

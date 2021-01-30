@@ -5,6 +5,11 @@ const {addRotationChannel} = require("../guild/guildHandler");
 async function command(msg, arguments){
     if(arguments[0] === "awr"){
 
+        //check if User has permission
+        if(!hasPermission(msg)){
+            return;
+        }
+
         if(arguments[1] === "version"){
             getVersion(msg);
         }else 
@@ -42,6 +47,18 @@ async function setupRotations(arguments, msg){
 
     addRotationChannel(guild, channel);
     
+}
+
+function hasPermission(msg){
+    var access = false;
+
+    const guildMember = msg.channel.guild.members.resolve(msg.author);
+
+    if(guildMember.hasPermission("MANAGE_ROLES")){
+        access = true;
+    }
+
+    return access
 }
 
 module.exports.command = command;

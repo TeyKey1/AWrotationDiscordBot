@@ -16,7 +16,6 @@ function readDataSync(){
     
     if (fs.existsSync(filePath)) {
         const json = fs.readFileSync(filePath, "utf-8");
-        console.log("JSON" + json);
         data = new Map(JSON.parse(json));
     }
 

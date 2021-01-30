@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 
 const {saveData, readDataSync} = require("../utility/dataHandler");
+const {createRotationMessages} = require("../rotation");
 
 var guilds = new Map();
 
@@ -43,6 +44,12 @@ function getGuilds(){
     return guilds;
 }
 
+function saveGuild(guild){
+    guilds.set(guild.guildId, guild);
+
+    saveData(guilds);
+}
+
 async function addRotationChannel(guild, rotationChannel){
     var guildData = exists(guild);
 
@@ -52,14 +59,22 @@ async function addRotationChannel(guild, rotationChannel){
 
     //check if channel already has rotation
 
+    for(var i = 0; i < guildData.rotationChannelData.length; i++){
+        if(guildData.rotationChannelData[i].channelId === rotationChannel.id){
 
-    const embed = new Discord.MessageEmbed()
-        .setColor("#FCA311")
-        .setTitle("PVE Rotations")
-        .setDescription("The Description");
+            const rotationMessage = await rotationChannel.messages.fetch(guildData.rotationChannelData[i].rotationMessageId);
+            const rotationImage = await rotationChannel.messages.fetch(guildData.rotationChannelData[i].rotationImageId);
 
-    const rotationMessage = await rotationChannel.send("", embed);
-    const rotationImage = await rotationChannel.send("http://teygaming.com:1212/data/rotations.png");
+            await rotationMessage.delete();
+            await rotationImage.delete();
+
+            guildData.rotationChannelData.splice(i, 1);
+            break;
+        }
+    }
+
+
+    const {rotationMessage, rotationImage} = await createRotationMessages(rotationChannel);
 
     guildData.rotationChannelData.push({
         channelId: rotationChannel.id,
@@ -88,4 +103,5 @@ module.exports.createGuild = createGuild;
 module.exports.deleteGuild = deleteGuild;
 module.exports.loadGuilds = loadGuilds;
 module.exports.getGuilds = getGuilds;
+module.exports.saveGuild = saveGuild;
 module.exports.addRotationChannel = addRotationChannel;

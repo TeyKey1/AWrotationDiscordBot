@@ -1,6 +1,6 @@
 const config = require("config");
 
-const {createGuild, deleteGuild} = require("../guild/guildHandler");
+const {createGuild, deleteGuild, getGuilds, saveGuild} = require("../guild/guildHandler");
 const {command} = require("./commands");
 
 function onMessage(msg){
@@ -23,6 +23,38 @@ function onGuildDelete(guild){
     deleteGuild(guild);
 }
 
+async function onMessageDelete(msg){
+    const guildData = getGuilds().get(msg.channel.guild.id);
+    if(guildData){
+
+        for(var i = 0; i < guildData.rotationChannelData.length; i++){
+            const rotationChannel = guildData.rotationChannelData[i];
+            if(rotationChannel.channelId === msg.channel.id){
+                if(rotationChannel.rotationMessageId === msg.id || rotationChannel.rotationImageId === msg.id){
+                        try {
+                            const rotationMessage = await msg.channel.messages.fetch(rotationChannel.rotationMessageId);
+                            await rotationMessage.delete();
+                        } catch (error) {
+                            
+                        }
+
+                        try {
+                            const rotationImage = await msg.channel.messages.fetch(rotationChannel.rotationImageId);
+                            await rotationImage.delete();
+                        } catch (error) {
+                            
+                        }
+
+                        guildData.rotationChannelData.splice(i, 1);
+
+                        saveGuild(guildData);
+                }
+            }
+        }
+    }
+}
+
 module.exports.onMessage = onMessage;
 module.exports.onGuildCreate = onGuildCreate;
 module.exports.onGuildDelete = onGuildDelete;
+module.exports.onMessageDelete = onMessageDelete;
