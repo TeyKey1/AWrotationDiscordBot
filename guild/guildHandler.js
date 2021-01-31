@@ -11,6 +11,7 @@ function createGuild(guild){
 
     if(existing){
         //Flush rotationChannelData
+        existing.rotationChannelData.splice(0, existing.rotationChannelData.length);
 
         saveData(guilds);
         return existing;
@@ -57,8 +58,7 @@ async function addRotationChannel(guild, rotationChannel){
         guildData = createGuild(guild);
     }
 
-    //check if channel already has rotation
-
+    //check if channel already has rotation and delete it
     for(var i = 0; i < guildData.rotationChannelData.length; i++){
         if(guildData.rotationChannelData[i].channelId === rotationChannel.id){
 
@@ -73,7 +73,6 @@ async function addRotationChannel(guild, rotationChannel){
         }
     }
 
-
     const {rotationMessage, rotationImage} = await createRotationMessages(rotationChannel);
 
     guildData.rotationChannelData.push({
@@ -84,6 +83,41 @@ async function addRotationChannel(guild, rotationChannel){
     
     guilds.set(guildData.guildId, guildData); 
     saveData(guilds);
+}
+
+async function deleteRotationChannel(guild, rotationChannel){
+    var guildData = exists(guild);
+
+    if(!guildData){
+        guildData = createGuild(guild);
+    }
+
+    var deleted = false;
+
+    //check if channel already has rotation and delete it
+    for(var i = 0; i < guildData.rotationChannelData.length; i++){
+        if(guildData.rotationChannelData[i].channelId === rotationChannel.id){
+
+            const rotationMessage = await rotationChannel.messages.fetch(guildData.rotationChannelData[i].rotationMessageId);
+            const rotationImage = await rotationChannel.messages.fetch(guildData.rotationChannelData[i].rotationImageId);
+
+            await rotationMessage.delete();
+            await rotationImage.delete();
+
+            guildData.rotationChannelData.splice(i, 1);
+
+            deleted = true;
+            break;
+        }
+    }
+    
+    if(deleted){
+        guilds.set(guildData.guildId, guildData); 
+        saveData(guilds);
+    }else{
+        throw new Error("ROTATION_NOT_FOUND");
+    }
+
 }
 
 /*
@@ -105,3 +139,4 @@ module.exports.loadGuilds = loadGuilds;
 module.exports.getGuilds = getGuilds;
 module.exports.saveGuild = saveGuild;
 module.exports.addRotationChannel = addRotationChannel;
+module.exports.deleteRotationChannel = deleteRotationChannel;

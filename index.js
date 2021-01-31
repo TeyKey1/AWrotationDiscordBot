@@ -53,7 +53,7 @@ async function init(){
 
 function scheduleRotationDownload(){
     const rule = new schedule.RecurrenceRule();
-    rule.minute = new schedule.Range(0, 59, 10);
+    rule.minute = new schedule.Range(0, 59, config.get("options.rotationFetchInterval"));
 
     schedule.scheduleJob("Downolad Rotations", rule, async ()=>{
         await downloadRotation();

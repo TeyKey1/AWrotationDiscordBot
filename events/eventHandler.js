@@ -7,7 +7,7 @@ function onMessage(msg){
     if(msg.content.substring(0, 1) === config.get("options.prefix")){
 
         const arguments = msg.content.substring(1).toLowerCase().replace(/\s\s+/g, " ").split(" ");
-        
+
         command(msg, arguments);
     }
 };
@@ -17,10 +17,27 @@ function onGuildCreate(guild){
 }
 
 function onGuildDelete(guild){
-    //Delete Messages of Bot
+    
+    const guildData = getGuilds().get(guild.id);
 
-    console.log("Kick");
-    deleteGuild(guild);
+    if(guildData){
+
+        /*guildData.rotationChannelData.forEach(async (e) => {
+            const channel = guild.channels.resolve(e.channelId);
+
+            const rotationMessage = await channel.messages.fetch(e.rotationMessageId);
+            const rotationImage = await channel.messages.fetch(e.rotationImageId);
+
+            await rotationMessage.delete();
+            await rotationImage.delete();
+            
+        });
+
+        console.log("Kick");*/
+
+        deleteGuild(guild);
+    }
+
 }
 
 async function onMessageDelete(msg){
