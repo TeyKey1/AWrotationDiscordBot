@@ -70,7 +70,7 @@ async function generateImage() {
     context.drawImage(baseImage, 0, 0);
 
     //Draw Rotation Time and Active Bracket
-    context.font = "regular 20pt Calibri";
+    context.font = "regular 20pt Microsoft New Tai Lue";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillStyle = "#000000";
@@ -105,7 +105,7 @@ async function generateImage() {
     }
 
     //Draw Missions
-    context.font = "regular 17pt Calibri";
+    context.font = "regular 17pt Microsoft New Tai Lue";
     context.textAlign = "start";
 
     for (var i = 0; i < 6; i++) {
@@ -115,7 +115,7 @@ async function generateImage() {
     }
 
     //Draw Date
-    context.font = "regular 11pt Calibri";
+    context.font = "regular 11pt Microsoft New Tai Lue";
     context.fillStyle = "#fff";
     context.fillText(getRotationDate().toLocaleString(DateTime.DATETIME_SHORT), 1050, 500);
 

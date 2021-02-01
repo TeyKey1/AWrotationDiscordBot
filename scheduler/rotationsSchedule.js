@@ -19,16 +19,24 @@ function scheduleUpdateTasks(bot) {
 
     //update rotation images
     updateRotationImagesTask = schedule.scheduleJob("update rotation images", ruleImage, async () => {
-        updateRotationImages(bot);
-        console.log("Update Rotation Image task");
+        try {
+            updateRotationImages(bot);
+            console.log("Update Rotation Image task");
+        } catch (err) {
+            console.log("Failed to update rotation images: " + err)
+        }
     });
 
     ruleMessage = new schedule.RecurrenceRule();
     ruleMessage.second = new schedule.Range(0, 59, 10);
 
     updateRotationMessagesTask = schedule.scheduleJob("update rotation messages", ruleMessage, async () => {
-        updateRotationMessages(bot);
-        console.log("Update Rotation Message task");
+        try {
+            updateRotationMessages(bot);
+            console.log("Update Rotation Message task");
+        } catch (err) {
+            console.log("Failed to update rotation messages: "+err);
+        }
     });
 }
 
@@ -51,21 +59,26 @@ async function updateRotationImages(bot) {
 
     const {urlID, prevUrlID} = getUrlId();
 
-    getGuilds().forEach((value, key) => {
+    getGuilds().forEach(async (value, key) => {
         try {
+
+            const guild = await bot.guilds.fetch(value.guildId);
+
             value.rotationChannelData.forEach(async (e) => {
+                try {
+                    const channel = guild.channels.resolve(e.channelId);
 
-                const guild = await bot.guilds.fetch(value.guildId);
-                const channel = guild.channels.resolve(e.channelId);
-
-                const rotationImage = await channel.messages.fetch(e.rotationImageId);
-
-                //update
-                rotationImage.edit(`${config.get("server.baseUrl")}:${config.get("server.port")}/data/rotations${urlID}.png`);
-
+                    const rotationImage = await channel.messages.fetch(e.rotationImageId);
+    
+                    //update
+                    rotationImage.edit(`${config.get("server.baseUrl")}:${config.get("server.port")}/data/rotations${urlID}.png`);
+                } catch (err) {
+                    console.log(`Failed to update rotation image message ID ${e.rotationImageId} in guild ID ${value.guildId}: `+err);
+                }
             });
-        } catch (err) {
 
+        } catch (err) {
+            console.log(`Failed to fetch guild with ID ${value.guildId}: `+ err);
         }
     });
 
@@ -79,25 +92,31 @@ async function updateRotationMessages(bot) {
 
     const difference = DateTime.fromISO(updateRotationImagesTask.nextInvocation().toISOString()).diffNow();
 
-    getGuilds().forEach((value, key) => {
+    getGuilds().forEach(async (value, key) => {
         try {
+
+            const guild = await bot.guilds.fetch(value.guildId);
+
             value.rotationChannelData.forEach(async (e) => {
+                try {
+                    const channel = guild.channels.resolve(e.channelId);
 
-                const guild = await bot.guilds.fetch(value.guildId);
-                const channel = guild.channels.resolve(e.channelId);
+                    const rotationMessage = await channel.messages.fetch(e.rotationMessageId);
 
-                const rotationMessage = await channel.messages.fetch(e.rotationMessageId);
-                //update
-                const embed = new Discord.MessageEmbed()
-                    .setColor("#FCA311")
-                    .setTitle("PVE Rotations")
-                    .setDescription(`Next maps in: ${difference.toFormat("mm:ss")} min \n\nAW rotations by ${config.get("options.rotationSourceUrl")}`);
+                    //update
+                    const embed = new Discord.MessageEmbed()
+                        .setColor("#FCA311")
+                        .setTitle("PVE Rotations")
+                        .setDescription(`Next maps in: ${difference.toFormat("mm:ss")} min \n\nAW rotations by ${config.get("options.rotationSourceUrl")}`);
 
-                rotationMessage.edit("", embed);
-
+                    rotationMessage.edit("", embed);
+                } catch (err) {
+                    console.log(`Failed to update rotation message message ID ${e.rotationMessageId} in guild ID ${value.guildId}: `+err);
+                }
             });
-        } catch (err) {
 
+        } catch (err) {
+            console.log(`Failed to fetch guild with ID ${value.guildId}: `+ err);
         }
     });
 }

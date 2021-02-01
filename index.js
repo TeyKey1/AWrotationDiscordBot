@@ -12,10 +12,8 @@ const bot = new Discord.Client();
 //Initialization & Login
 bot.login(config.get("token"));
 
-init();
 
-
-bot.on("ready", ()=>{
+bot.on("ready", async ()=>{
     bot.user.setPresence({
         status: "online", 
         activity: {
@@ -24,7 +22,9 @@ bot.on("ready", ()=>{
         }
     });
 
-    console.log("Discord ready");
+    console.log("Discord JS ready");
+
+    await init();
 });
 
 //Events
@@ -40,15 +40,20 @@ async function init(){
     
     try {
         loadGuilds();
-
-        scheduleUpdateTasks(bot);
-        scheduleRotationDownload();
-
-        await downloadRotation();
-
     } catch (err) {
-        console.log("Failed to read server file: " + err);
+        console.log("Failed to load guild data: " + err);
+        process.exit(1);
     }
+
+    try{
+        await downloadRotation();
+    } catch (err) {
+        console.log("Failed to download rotations on init: " + err);
+    }
+
+    scheduleUpdateTasks(bot);
+    scheduleRotationDownload();
+
 }
 
 function scheduleRotationDownload(){
@@ -56,7 +61,11 @@ function scheduleRotationDownload(){
     rule.minute = new schedule.Range(0, 59, config.get("options.rotationFetchInterval"));
 
     schedule.scheduleJob("Downolad Rotations", rule, async ()=>{
-        await downloadRotation();
-        console.log("Downolad Rotation task");
+        try {
+            await downloadRotation();
+            console.log("Downolad Rotation task");
+        } catch (err) {
+            console.log(`Failed to download rotations. Try again in ${config.get("options.rotationFetchInterval")}. ` + err);
+        }
     });
 }

@@ -3,12 +3,16 @@ const config = require("config");
 const {createGuild, deleteGuild, getGuilds, saveGuild} = require("../guild/guildHandler");
 const {command} = require("./commands");
 
-function onMessage(msg){
+async function onMessage(msg){
     if(msg.content.substring(0, 1) === config.get("options.prefix")){
 
         const arguments = msg.content.substring(1).toLowerCase().replace(/\s\s+/g, " ").split(" ");
 
-        command(msg, arguments);
+        try {
+            await command(msg, arguments);
+        } catch (err) {
+            console.log("CommandHandler error: " + err);
+        }
     }
 };
 

@@ -12,19 +12,35 @@ async function command(msg, arguments){
         }
 
         if(arguments[1] === "version"){
-            getVersion(msg);
+            try {
+                getVersion(msg);
+            } catch (error) {
+                console.log("Failed to serve version command: "+err);
+            }
         }else 
 
         if(arguments[1] === "help"){
-            getHelp(msg);
+            try {
+                getHelp(msg);
+            } catch (err) {
+                console.log("Failed to serve help command: "+err);
+            }
         }else 
 
         if(arguments[1] === "setup"){
-             setupRotations(arguments, msg);
+            try {
+                setupRotations(arguments, msg);
+            } catch (error) {
+                console.log("Failed to serve setup command: "+err);
+            }
         }else
 
         if(arguments[1] === "delete"){
-            deleteRotations(arguments, msg);
+            try {
+                deleteRotations(arguments, msg);
+            } catch (error) {
+                console.log("Failed to serve delete command: "+err);
+            }
         }
         
         else{
@@ -34,7 +50,7 @@ async function command(msg, arguments){
 }
 
 function getVersion(msg){
-    msg.channel.send(`**Software Version:** ${process.env.npm_package_version}\n**Developed By:** TeyKey1\n**Github:** `);
+    msg.channel.send(`**Software Version:** ${process.env.npm_package_version}\n**Developed By:** TeyKey1\n**Github:** https://github.com/TeyKey1/AWrotationDiscordBot`);
 }
 
 function getHelp(msg){
@@ -49,6 +65,8 @@ function getHelp(msg){
         .setFooter("AW rotations Discord Bot by TeyKey1")
         .addField("General Commands", generalString)
         .addField("Misc Commands", miscString);
+    
+    
     msg.channel.send("", embed);
     
 }

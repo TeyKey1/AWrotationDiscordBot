@@ -1,0 +1,14 @@
+{
+    "token": "",
+    "options": {
+        "prefix": "$",
+        "rotationURL": "https://aw.nikr.net/data.json",
+        "rotationSourceUrl": "https://aw.nikr.net/",
+        "rotationFetchInterval": 10,
+        "permission": "MANAGE_ROLES"
+    },
+    "server": {
+        "port": 80,
+        "baseUrl": "http://awtactics.com/discordbot"
+    }
+}
