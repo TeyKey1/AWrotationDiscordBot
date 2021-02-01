@@ -5,7 +5,8 @@ This Project is best used in combination with the online [Armored Warfare PVE Ro
 
 ### Invite the provided Discord Bot to your Discord Server
 This is probably the best and simplest solution for most usecases. Simply click this link and invite the bot to your server: 
-To setup a Rotation message use the provided Discord Commands
+
+To setup a rotation message use the provided Discord Commands
 
 ### Discord Commands
 You can use the following commands in Discord to control the bot:
