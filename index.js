@@ -1,6 +1,7 @@
 const Discord = require("discord.js");
 const config = require("config");
 const schedule = require("node-schedule");
+const fs = require("fs");
 
 const eventHandler = require("./events/eventHandler");
 const {downloadRotation} = require("./utility/fetchRotation");
@@ -35,6 +36,18 @@ bot.on("messageDelete", eventHandler.onMessageDelete);
 
 
 async function init(){
+    //check if data directory exists or create a new one
+    try {
+        if(!fs.existsSync("./data")){
+            fs.mkdirSync("./data");
+            console.log("No data directory found, creating a new one.");
+        }
+    } catch (err) {
+        console.log("Failed to create a new data directory: "+err);
+        process.exit(1);
+    }
+
+
     //Start webserver serving static files
     require("./server");
     
