@@ -1,7 +1,7 @@
 const schedule = require("node-schedule");
 const Discord = require("discord.js");
 const config = require("config");
-const {DateTime} = require("luxon");
+const {DateTime, Duration} = require("luxon");
 const fs = require("fs");
 
 const { getGuilds } = require("../guild/guildHandler");
@@ -90,7 +90,11 @@ async function updateRotationImages(bot) {
 
 async function updateRotationMessages(bot) {
 
-    const difference = DateTime.fromISO(updateRotationImagesTask.nextInvocation().toISOString()).diffNow();
+    var difference = DateTime.fromISO(updateRotationImagesTask.nextInvocation().toISOString()).diffNow();
+
+    if(difference <= Duration.fromObject({minutes: 0, seconds: 0})){
+        difference = Duration.fromObject({minutes: 3, seconds: 0});
+    }
 
     getGuilds().forEach(async (value, key) => {
         try {
