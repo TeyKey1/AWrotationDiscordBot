@@ -21,7 +21,6 @@ function scheduleUpdateTasks(bot) {
     updateRotationImagesTask = schedule.scheduleJob("update rotation images", ruleImage, async () => {
         try {
             updateRotationImages(bot);
-            console.log("Update Rotation Image task");
         } catch (err) {
             console.log("Failed to update rotation images: " + err)
         }
@@ -33,7 +32,6 @@ function scheduleUpdateTasks(bot) {
     updateRotationMessagesTask = schedule.scheduleJob("update rotation messages", ruleMessage, async () => {
         try {
             updateRotationMessages(bot);
-            console.log("Update Rotation Message task");
         } catch (err) {
             console.log("Failed to update rotation messages: "+err);
         }

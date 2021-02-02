@@ -63,7 +63,6 @@ function scheduleRotationDownload(){
     schedule.scheduleJob("Downolad Rotations", rule, async ()=>{
         try {
             await downloadRotation();
-            console.log("Downolad Rotation task");
         } catch (err) {
             console.log(`Failed to download rotations. Try again in ${config.get("options.rotationFetchInterval")}. ` + err);
         }
