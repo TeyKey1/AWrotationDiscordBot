@@ -1,6 +1,6 @@
 const fs = require("fs");
 const { DateTime, Duration } = require("luxon");
-const { createCanvas, loadImage } = require("canvas");
+const { createCanvas, loadImage, registerFont } = require("canvas");
 const schedule = require("node-schedule");
 const Discord = require("discord.js");
 const config = require("config");
@@ -15,6 +15,7 @@ var offset = { minutes: -2, seconds: -32 };
 var urlID = "";
 var prevUrlID = "";
 
+registerFont("./assets/ntailu.ttf", { family: "Microsoft New Tai Lue" });
 
 function setRotationDate(date) {
     updatedAt = date;
@@ -117,7 +118,7 @@ async function generateImage() {
     //Draw Date
     context.font = "regular 11pt Microsoft New Tai Lue";
     context.fillStyle = "#fff";
-    context.fillText(getRotationDate().toLocaleString(DateTime.DATETIME_SHORT), 1050, 500);
+    context.fillText(getRotationDate().toFormat("d/M/y HH:ss"), 1050, 500);
 
     //Draw Timezone
     context.fillText(DateTime.local().toFormat("ZZZZ"), 892, 500);
