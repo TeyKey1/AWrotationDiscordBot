@@ -89,7 +89,8 @@ async function setupRotations(arguments, msg){
     try {
         await addRotationChannel(guild, channel);
         await msg.channel.send("Setup rotations successfully.");
-    } catch (error) {
+    } catch (err) {
+        console.log("Failed to setup rotations: "+err);
         await msg.channel.send("Failed to setup rotations.");
     }
     

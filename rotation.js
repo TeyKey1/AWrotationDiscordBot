@@ -106,7 +106,7 @@ async function generateImage() {
     }
 
     //Draw Missions
-    context.font = "regular 17pt Microsoft New Tai Lue";
+    context.font = "regular 17.5pt Microsoft New Tai Lue";
     context.textAlign = "start";
 
     for (var i = 0; i < 6; i++) {
@@ -118,10 +118,10 @@ async function generateImage() {
     //Draw Date
     context.font = "regular 11pt Microsoft New Tai Lue";
     context.fillStyle = "#fff";
-    context.fillText(getRotationDate().toFormat("d/M/y HH:ss"), 1050, 500);
+    context.fillText(getRotationDate().toFormat("d/M/y HH:ss"), 1050, 501);
 
     //Draw Timezone
-    context.fillText(DateTime.local().toFormat("ZZZZ"), 892, 500);
+    context.fillText(DateTime.local().toFormat("ZZZZ"), 892, 502);
 
 
     const buffer = canvas.toBuffer('image/png');
