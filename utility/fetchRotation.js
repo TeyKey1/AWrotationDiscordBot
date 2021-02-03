@@ -8,13 +8,24 @@ const {setRotationDate, getRotationDate, setRotations, setOffset} = require("../
 const {updateSchedule} = require("../scheduler/rotationsSchedule");
 
 const rotationFilePath = "./data/rotation.json";
+var eTag = "";
 
 async function downloadRotation(){
     const res = await fetch(config.get("options.rotationURL"), {
         method: 'GET',
-        headers: {"Content-Type": "application/json"},
+        headers: {  
+            "Content-Type": "application/json",
+            "If-None-Match": eTag
+         },
         body: null
     });
+
+    eTag = res.headers.get("ETag");
+
+    //Data up to date
+    if(res.status === 304){
+        return;
+    }
 
     const string = await streamToString(res.body);
 
