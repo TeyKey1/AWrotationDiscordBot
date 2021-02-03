@@ -4,7 +4,7 @@ A discord bot which shows the active PVE rotations in AW.
 This Project is best used in combination with the online [Armored Warfare PVE Rotation Tracker](https://github.com/GoldenGnu/armored-warfare-pve-tracker) by GoldenGnu. But can also be used standalone. You can host your own Discord Bot or simply use the provided one.
 
 ### Invite the provided Discord Bot to your Discord Server
-This is probably the best and simplest solution for most usecases. Simply click this link and invite the bot to your server: 
+This is probably the best and simplest solution for most usecases. Simply click this link and invite the bot to your server: https://discord.com/api/oauth2/authorize?client_id=802580434768756786&permissions=126016&scope=bot
 
 To setup a rotation message use the provided Discord Commands
 
