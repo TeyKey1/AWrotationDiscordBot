@@ -125,7 +125,7 @@ async function generateImage() {
 
 
     const buffer = canvas.toBuffer('image/png');
-    fs.writeFile(`./data/rotations${urlID}.png`, buffer, (err) => {
+    fs.writeFile(`./data/public/rotations${urlID}.png`, buffer, (err) => {
         if (err) {
             throw new Error("Failed to save rotation image" + err);
         }

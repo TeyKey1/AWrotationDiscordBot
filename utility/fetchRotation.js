@@ -7,7 +7,7 @@ const  {DateTime} = require("luxon");
 const {setRotationDate, getRotationDate, setRotations, setOffset} = require("../rotation");
 const {updateSchedule} = require("../scheduler/rotationsSchedule");
 
-const rotationFilePath = "./data/rotation.json";
+const rotationFilePath = "./data/public";
 var eTag = "";
 
 async function downloadRotation(){
@@ -41,7 +41,11 @@ async function downloadRotation(){
     setRotationDate(date);
 
     //Save rotation to file
-    fs.writeFile(rotationFilePath, JSON.stringify(data), (err)=>{
+    if(!fs.existsSync(rotationFilePath)){
+        fs.mkdirSync(rotationFilePath);
+    }
+
+    fs.writeFile(rotationFilePath + "/rotation.json", JSON.stringify(data), (err)=>{
         if(err){
             throw new Error("Failed to save rotation file: " + err);
         }
@@ -52,7 +56,7 @@ async function downloadRotation(){
 }
 
 function updateRotation(){
-    fs.readFile(rotationFilePath, "utf-8", (err, data)=>{
+    fs.readFile(rotationFilePath + "/rotation.json", "utf-8", (err, data)=>{
         if(err){
             throw new Error("Failed to read rotation file: " + err);
         }
