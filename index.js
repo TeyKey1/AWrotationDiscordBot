@@ -65,6 +65,7 @@ async function init(){
     }
 
     scheduleUpdateTasks(bot);
+
     scheduleRotationDownload();
 
 }

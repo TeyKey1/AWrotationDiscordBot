@@ -81,7 +81,7 @@ async function updateRotationImages(bot) {
     });
 
     //Delete old image
-    fs.unlink(`./data/rotations${prevUrlID}.png`, (err) => {
+    fs.unlink(`./data/public/rotations${prevUrlID}.png`, (err) => {
 
     });
 }

@@ -51,7 +51,6 @@ async function downloadRotation(){
         }
 
         updateRotation();  
-        updateSchedule();
     }); 
 }
 
@@ -66,6 +65,8 @@ function updateRotation(){
         setRotations(rotation.missions);
 
         setOffset(rotation.minutesOffset, rotation.secondsOffset);
+
+        updateSchedule();
     });
 }
 
