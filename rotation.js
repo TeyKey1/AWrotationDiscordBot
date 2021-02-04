@@ -76,15 +76,12 @@ async function generateImage() {
     context.textBaseline = "middle";
     context.fillStyle = "#000000";
 
-    console.log(offset);
-    console.log(DateTime.local().toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
     //Calculate time of AW server timer based on offset
     var serverTime = DateTime.local().plus(Duration.fromObject({minutes: offset.minutes}));
 
     //Calculate current bracket position & timetable
     var time;
     var position;
-    console.log(serverTime.minute);
     if (serverTime.minute >= (30 + offset.minutes)) {
         position = Math.round((serverTime.minute - (30 + offset.minutes)) / 9 * 3);
         time = DateTime.fromObject({ hour: serverTime.hour, minutes: DateTime.fromObject({ minutes: 30 }).plus(Duration.fromObject({ minutes: offset.minutes })).minute });
@@ -92,8 +89,6 @@ async function generateImage() {
         position = Math.round((serverTime.minute - offset.minutes) / 9 * 3);
         time = DateTime.fromObject({ hour: serverTime.hour, minutes: DateTime.fromObject({ minutes: 0 }).plus(Duration.fromObject({ minutes: offset.minutes })).minute });
     }
-
-    console.log(position);
 
     //Active Bracket
     context.drawImage(activeBracket, xOffset, yOffset + (position * yGap));
