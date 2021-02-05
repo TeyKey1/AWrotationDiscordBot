@@ -11,11 +11,12 @@ const { v1: uuidV1 } = require("uuid");
 
 var updatedAt = DateTime.local({ year: 2000, day: 1, month: 1 });
 var rotations = [[], [], [], [], [], []];
-var offset = { minutes: -2, seconds: -32 };
+var offset = Duration.fromObject({minutes: 0, seconds: 0});
 var urlID = "";
 var prevUrlID = "";
 
 registerFont("./assets/ntailu.ttf", { family: "Microsoft New Tai Lue" });
+
 
 function setRotationDate(date) {
     updatedAt = date;
@@ -35,7 +36,7 @@ function getRotations() {
 }
 
 function setOffset(minutes, seconds) {
-    offset = { minutes: minutes, seconds: seconds };
+    offset = Duration.fromObject({minutes: minutes, seconds: seconds}).shiftTo("minutes", "seconds");
 }
 
 function getOffset(){
@@ -110,7 +111,11 @@ async function generateImage() {
 
     for (var i = 0; i < 6; i++) {
         for (var k = 0; k < 10; k++) {
-            context.fillText(rotations[i][k], xOffset + xTimeGap + 5 + (xGap * i), yOffset + 21 + (yGap * k));
+            if(rotations[i][k]===""){
+                context.fillText("Updating...", xOffset + xTimeGap + 5 + (xGap * i), yOffset + 21 + (yGap * k));
+            }else{
+                context.fillText(rotations[i][k], xOffset + xTimeGap + 5 + (xGap * i), yOffset + 21 + (yGap * k));
+            }
         }
     }
 
