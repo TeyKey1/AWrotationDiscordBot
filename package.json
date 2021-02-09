@@ -1,6 +1,6 @@
 {
   "name": "aw_rotations_discordbot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "start": "node index"
   },
   "author": "TeyKey1",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "canvas": "^2.6.1",
     "config": "^3.3.3",
