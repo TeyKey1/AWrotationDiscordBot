@@ -24,7 +24,6 @@ function createGuild(guild){
     };
 
     guilds.set(guild.id, guildData);
-    console.log(guilds);
 
     saveData(guilds);
 

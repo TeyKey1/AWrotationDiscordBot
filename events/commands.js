@@ -91,7 +91,20 @@ async function setupRotations(arguments, msg){
         await msg.channel.send("Setup rotations successfully.");
     } catch (err) {
         console.log("Failed to setup rotations: "+err);
-        await msg.channel.send("Failed to setup rotations.");
+
+        if(err.code === Discord.Constants.APIErrors.MISSING_ACCESS || err.code === Discord.Constants.APIErrors.MISSING_PERMISSIONS){
+            try {
+                await msg.channel.send("Bot does not have sufficient permissions to access this channel!");
+            } catch (err) {
+                
+            }
+        }else{
+            try {
+                await msg.channel.send("Failed to setup rotations.");
+            } catch (err) {
+                
+            }
+        }
     }
     
 }

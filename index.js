@@ -34,6 +34,15 @@ bot.on("guildCreate", eventHandler.onGuildCreate);
 bot.on("guildDelete", eventHandler.onGuildDelete);
 bot.on("messageDelete", eventHandler.onMessageDelete);
 
+//Errors
+process.on('unhandledRejection', err => {
+	console.error("Unhandled promise rejection:", err);
+});
+
+bot.on("error", err => {
+    console.error("Discord client error:", err);
+});
+
 
 async function init(){
     //check if data directory exists or create a new one
@@ -43,7 +52,7 @@ async function init(){
             console.log("No data directory found, creating a new one.");
         }
     } catch (err) {
-        console.log("Failed to create a new data directory: "+err);
+        console.error("Failed to create a new data directory: ", err);
         process.exit(1);
     }
 
@@ -54,7 +63,7 @@ async function init(){
     try {
         loadGuilds();
     } catch (err) {
-        console.log("Failed to load guild data: " + err);
+        console.error("Failed to load guild data: ", err);
         process.exit(1);
     }
 
