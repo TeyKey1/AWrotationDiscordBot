@@ -8,7 +8,14 @@ const {downloadRotation} = require("./utility/fetchRotation");
 const {scheduleUpdateTasks} = require("./scheduler/rotationsSchedule");
 const { loadGuilds } = require("./guild/guildHandler");
 
-const bot = new Discord.Client();
+const bot = new Discord.Client({
+    messageCacheMaxSize: 100, 
+    messageCacheLifetime:	43200, 
+    messageSweepInterval: 3600,
+    messageEditHistoryMaxSize: 0,
+    fetchAllMembers: false,
+    retryLimit: 3
+});
 
 //Initialization & Login
 bot.login(config.get("token"));

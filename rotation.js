@@ -77,19 +77,33 @@ async function generateImage() {
     context.textBaseline = "middle";
     context.fillStyle = "#000000";
 
-    //Calculate time of AW server timer based on offset
-    var serverTime = DateTime.local().plus(Duration.fromObject({minutes: offset.minutes}));
+    var currentTime = DateTime.local();
 
     //Calculate current bracket position & timetable
-    var time;
+    var tableStartTime;
     var position;
-    if (serverTime.minute >= (30 + offset.minutes)) {
-        position = Math.round((serverTime.minute - (30 + offset.minutes)) / 9 * 3);
-        time = DateTime.fromObject({ hour: serverTime.hour, minutes: DateTime.fromObject({ minutes: 30 }).plus(Duration.fromObject({ minutes: offset.minutes })).minute });
+    if (currentTime >= currentTime.set({minute: 30, second: 0}).plus(offset)) {
+
+        position = Math.round(currentTime.minus(offset.plus({minutes: 30})).minute / 9 * 3) % 10;
+        tableStartTime = currentTime.set({minute: 30, second: 0}).plus(offset);
+
     } else {
-        position = Math.round((serverTime.minute - offset.minutes) / 9 * 3);
-        time = DateTime.fromObject({ hour: serverTime.hour, minutes: DateTime.fromObject({ minutes: 0 }).plus(Duration.fromObject({ minutes: offset.minutes })).minute });
+
+        position = Math.round(currentTime.minus(offset).minute / 9 * 3) % 10;
+        tableStartTime = currentTime.set({minute: 0, second: 0}).plus(offset);
+
     }
+
+    /*Debug
+
+    console.log("offset:"+offset.minutes);
+    console.log("timetable start: "+tableStartTime.minute);
+
+    console.log(DateTime.local().toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
+    console.log("Servertime:" +serverTime.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
+
+    console.log(position);
+    */
 
     //Active Bracket
     context.drawImage(activeBracket, xOffset, yOffset + (position * yGap));
@@ -101,9 +115,10 @@ async function generateImage() {
     //Times
     for (position; position < end; position++) {
 
-        context.fillText(time.plus({ minutes: 3 * position }).toLocaleString(DateTime.TIME_24_SIMPLE), xOffset + (xTimeGap / 2), yOffset + 21 + ((position % 10) * yGap));
+        context.fillText(tableStartTime.plus({ minutes: 3 * position }).toLocaleString(DateTime.TIME_24_SIMPLE), xOffset + (xTimeGap / 2), yOffset + 21 + ((position % 10) * yGap));
 
     }
+
 
     //Draw Missions
     context.font = "regular 17.5pt Microsoft New Tai Lue";

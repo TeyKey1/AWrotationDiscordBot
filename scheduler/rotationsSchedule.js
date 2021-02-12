@@ -41,7 +41,7 @@ function scheduleUpdateTasks(bot) {
 function updateSchedule() {
     const offset = getOffset();
 
-    ruleImage.minute = new schedule.Range(offset.minutes, 59, 3);
+    ruleImage.minute = new schedule.Range(DateTime.fromObject({minute: 0, seconds: 0}).plus(offset).minute % 3, 60, 3);
     ruleImage.second = DateTime.fromObject({second: 0}).plus({seconds: offset.seconds}).second;
 
     updateRotationImagesTask.reschedule(ruleImage);
