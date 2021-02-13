@@ -18,7 +18,7 @@ const consoleFormat = format.combine(
         label: '[BOT]'
     }),
     timestamp({
-        format: "DD-MM-YYYY HH:MM:SS"
+        format: "DD-MM-YYYY HH:mm:ss"
     }),
     printf(info => {
         if(info.stack) {
@@ -65,7 +65,7 @@ const consoleFormatServer = format.combine(
         label: '[EXPRESS SERVER]'
     }),
     timestamp({
-        format: "DD-MM-YYYY HH:MM:SS"
+        format: "DD-MM-YYYY HH:mm:ss"
     }),
     printf(info => {
         if(info.stack) {
