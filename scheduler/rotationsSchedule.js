@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const config = require("config");
 const {DateTime, Duration} = require("luxon");
 const fs = require("fs");
+const {logger} = require("../utility/logger");
 
 const { getGuilds } = require("../guild/guildHandler");
 const {getOffset, generateImage, getUrlId} = require("../rotation");
@@ -22,7 +23,7 @@ function scheduleUpdateTasks(bot) {
         try {
             updateRotationImages(bot);
         } catch (err) {
-            console.log("Failed to update rotation images: " + err)
+            logger.warn("Failed to update rotation images:", err);
         }
     });
 
@@ -33,7 +34,7 @@ function scheduleUpdateTasks(bot) {
         try {
             updateRotationMessages(bot);
         } catch (err) {
-            console.log("Failed to update rotation messages: "+err);
+            logger.warn("Failed to update rotation messages:", err);
         }
     });
 }
@@ -53,7 +54,12 @@ function updateSchedule() {
 }
 
 async function updateRotationImages(bot) {
-    await generateImage();
+    
+    try {
+        await generateImage();
+    } catch (err) {
+        logger.error("Failed to generate rotation image:", err);
+    }
 
     const {urlID, prevUrlID} = getUrlId();
 
@@ -71,12 +77,12 @@ async function updateRotationImages(bot) {
                     //update
                     rotationImage.edit(`${config.get("server.baseUrl")}:${config.get("server.port")}/data/rotations${urlID}.png`);
                 } catch (err) {
-                    console.log(`Failed to update rotation image message ID ${e.rotationImageId} in guild ID ${value.guildId}: `+err);
+                    logger.warn(`Failed to update rotation image message ID ${e.rotationImageId} in guild ID ${value.guildId}:`, err);
                 }
             });
 
         } catch (err) {
-            console.log(`Failed to fetch guild with ID ${value.guildId}: `+ err);
+            logger.warn(`Failed to fetch guild with ID ${value.guildId}:`, err);
         }
     });
 
@@ -113,12 +119,12 @@ async function updateRotationMessages(bot) {
 
                     rotationMessage.edit("", embed);
                 } catch (err) {
-                    console.log(`Failed to update rotation message message ID ${e.rotationMessageId} in guild ID ${value.guildId}: `+err);
+                    logger.warn(`Failed to update rotation message message ID ${e.rotationMessageId} in guild ID ${value.guildId}:`, err);
                 }
             });
 
         } catch (err) {
-            console.log(`Failed to fetch guild with ID ${value.guildId}: `+ err);
+            logger.warn(`Failed to fetch guild with ID ${value.guildId}:`, err);
         }
     });
 }

@@ -1,11 +1,10 @@
 const fs = require("fs");
 const { DateTime, Duration } = require("luxon");
 const { createCanvas, loadImage, registerFont } = require("canvas");
-const schedule = require("node-schedule");
 const Discord = require("discord.js");
 const config = require("config");
 const { v1: uuidV1 } = require("uuid");
-
+const {logger} = require("./utility/logger");
 
 
 
@@ -94,16 +93,14 @@ async function generateImage() {
 
     }
 
-    /*Debug
+    //Debug
+    logger.debug(`Offset: ${offset.minutes}min ${offset.seconds}sec`);
+    logger.debug(`Timetable start: ${tableStartTime.minute}`);
 
-    console.log("offset:"+offset.minutes);
-    console.log("timetable start: "+tableStartTime.minute);
+    logger.debug(DateTime.local().toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
 
-    console.log(DateTime.local().toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
-    console.log("Servertime:" +serverTime.toLocaleString(DateTime.DATETIME_FULL_WITH_SECONDS));
-
-    console.log(position);
-    */
+    logger.debug(`Position ${position}`);
+    
 
     //Active Bracket
     context.drawImage(activeBracket, xOffset, yOffset + (position * yGap));

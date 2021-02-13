@@ -7,6 +7,7 @@ const eventHandler = require("./events/eventHandler");
 const {downloadRotation} = require("./utility/fetchRotation");
 const {scheduleUpdateTasks} = require("./scheduler/rotationsSchedule");
 const { loadGuilds } = require("./guild/guildHandler");
+const {logger} = require("./utility/logger");
 
 const bot = new Discord.Client({
     messageCacheMaxSize: 100, 
@@ -18,7 +19,11 @@ const bot = new Discord.Client({
 });
 
 //Initialization & Login
-bot.login(config.get("token"));
+bot.login(config.get("token")).catch(err =>{
+    logger.error("Failed to login Bot on Discord:", err);
+    process.exit(1);
+});
+
 
 
 bot.on("ready", async ()=>{
@@ -30,7 +35,7 @@ bot.on("ready", async ()=>{
         }
     });
 
-    console.log("Discord JS ready");
+    logger.info("Discord JS ready");
 
     await init();
 });
@@ -43,11 +48,11 @@ bot.on("messageDelete", eventHandler.onMessageDelete);
 
 //Errors
 process.on('unhandledRejection', err => {
-	console.error("Unhandled promise rejection:", err);
+	logger.error("Unhandled promise rejection:", err);
 });
 
 bot.on("error", err => {
-    console.error("Discord client error:", err);
+    logger.error("Discord client error:", err);
 });
 
 
@@ -56,10 +61,10 @@ async function init(){
     try {
         if(!fs.existsSync("./data")){
             fs.mkdirSync("./data");
-            console.log("No data directory found, creating a new one.");
+            logger.info("No data directory found, creating a new one.");
         }
     } catch (err) {
-        console.error("Failed to create a new data directory: ", err);
+        logger.error("Failed to create a new data directory:", err);
         process.exit(1);
     }
 
@@ -70,14 +75,14 @@ async function init(){
     try {
         loadGuilds();
     } catch (err) {
-        console.error("Failed to load guild data: ", err);
+        logger.error("Failed to load guild data:", err);
         process.exit(1);
     }
 
     try{
         await downloadRotation();
     } catch (err) {
-        console.log("Failed to download rotations on init: " + err);
+        logger.warn("Failed to download rotations on init:", err);
     }
 
     scheduleUpdateTasks(bot);
@@ -94,7 +99,7 @@ function scheduleRotationDownload(){
         try {
             await downloadRotation();
         } catch (err) {
-            console.log(`Failed to download rotations. Try again in ${config.get("options.rotationFetchInterval")}. ` + err);
+            logger.warn(`Failed to download rotations. Try again in ${config.get("options.rotationFetchInterval")}.`, err);
         }
     });
 }

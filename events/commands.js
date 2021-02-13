@@ -1,5 +1,6 @@
 const config = require("config");
 const Discord = require("discord.js");
+const {logger} = require("../utility/logger");
 
 const {addRotationChannel, deleteRotationChannel} = require("../guild/guildHandler");
 
@@ -15,7 +16,7 @@ async function command(msg, arguments){
             try {
                 getVersion(msg);
             } catch (error) {
-                console.log("Failed to serve version command: "+err);
+                logger.warn("Failed to serve version command:", err);
             }
         }else 
 
@@ -23,7 +24,7 @@ async function command(msg, arguments){
             try {
                 getHelp(msg);
             } catch (err) {
-                console.log("Failed to serve help command: "+err);
+                logger.warn("Failed to serve help command:", err);
             }
         }else 
 
@@ -31,7 +32,7 @@ async function command(msg, arguments){
             try {
                 setupRotations(arguments, msg);
             } catch (error) {
-                console.log("Failed to serve setup command: "+err);
+                logger.warn("Failed to serve setup command:", err);
             }
         }else
 
@@ -39,7 +40,7 @@ async function command(msg, arguments){
             try {
                 deleteRotations(arguments, msg);
             } catch (error) {
-                console.log("Failed to serve delete command: "+err);
+                logger.warn("Failed to serve delete command:", err);
             }
         }
         
@@ -90,7 +91,6 @@ async function setupRotations(arguments, msg){
         await addRotationChannel(guild, channel);
         await msg.channel.send("Setup rotations successfully.");
     } catch (err) {
-        console.log("Failed to setup rotations: "+err);
 
         if(err.code === Discord.Constants.APIErrors.MISSING_ACCESS || err.code === Discord.Constants.APIErrors.MISSING_PERMISSIONS){
             try {
@@ -104,6 +104,7 @@ async function setupRotations(arguments, msg){
             } catch (err) {
                 
             }
+            logger.warn("Failed to setup rotations:", err);
         }
     }
     

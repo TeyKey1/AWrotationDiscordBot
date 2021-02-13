@@ -1,4 +1,5 @@
 const config = require("config");
+const {logger} = require("../utility/logger");
 
 const {createGuild, deleteGuild, getGuilds, saveGuild} = require("../guild/guildHandler");
 const {command} = require("./commands");
@@ -11,7 +12,7 @@ async function onMessage(msg){
         try {
             await command(msg, arguments);
         } catch (err) {
-            console.log("CommandHandler error: " + err);
+            logger.error("CommandHandler error:", err);
         }
     }
 };
