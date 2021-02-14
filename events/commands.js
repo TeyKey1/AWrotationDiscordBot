@@ -57,8 +57,8 @@ function getVersion(msg){
 function getHelp(msg){
     const prefix = config.get("options.prefix");
 
-    const generalString = prefix + "setup channel\n```css\nCreates a new PVE rotation message in given channel.```\n"+prefix+"delete channel\n```css\nDeletes the PVE rotation message in given channel.```\n";
-    const miscString = prefix + "version\n```css\nShows the version and about page of this bot```\n"+prefix+"help\n```css\nShows this help page```\n";
+    const generalString = prefix + "awr setup *#channel*\n```css\nCreates a new PVE rotation message in given channel.```\n"+prefix+"awr delete *#channel*\n```css\nDeletes the PVE rotation message in given channel.```\n";
+    const miscString = prefix + "awr version\n```css\nShows the version and about page of this bot```\n"+prefix+"awr help\n```css\nShows this help page```\n";
 
     const embed = new Discord.MessageEmbed()
         .setColor("#FCA311")
